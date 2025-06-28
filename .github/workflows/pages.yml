@@ -14,9 +14,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Use Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -24,17 +25,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build & export static HTML
+      - name: Build & export static site
         run: npm run export:clean
 
-      - name: Upload static files
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload static files for Pages
+        # must be v3 or newer to replace the deprecated v1/v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: out
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://${{ github.repository_owner }}.github.io/
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+        # deploy-pages v4 is required alongside upload-pages-artifact@v3+
+        uses: actions/deploy-pages@v4
