@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export",
-    "export:clean": "rm -rf out && npm run build && npm run export",
+    "clean:out": "rm -rf out",
     "start": "next start",
     "lint": "next lint"
   },
